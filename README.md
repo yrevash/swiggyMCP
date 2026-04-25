@@ -45,13 +45,23 @@ Mira:  Done. Groceries on the way. Calendar invite sent for Saturday.
 
 No money moves before the user says yes. Confirmation is always a separate step.
 
-## Diagrams
+## Architecture
 
-All in `utils/`:
+High level view of how everything connects. Channels on the left feed into a Next.js app, the agent loop talks to OpenRouter for the LLM and to Swiggy's MCP servers for actions, and Supabase plus Langfuse handle data and tracing.
 
-* `swiggy_1.svg` -> high level architecture
-* `swiggy_2.svg` -> conversation flow (sequence)
-* `swiggy_3.svg` -> full system design with data models, Redis, jobs, etc.
+![Architecture](utils/swiggy_1.svg)
+
+## Conversation flow
+
+What actually happens when a user chats with Mira. The agent loops between the LLM and the MCP servers to build a plan, then stops at a confirmation gate before placing any orders. No money moves without a yes.
+
+![Conversation flow](utils/swiggy_2.svg)
+
+## System design
+
+The full picture with infrastructure and data models. Redis for sessions and caching, Postgres for plans and orders, Inngest for background jobs like delivery polling and weekly plan regeneration. The agent core is the yellow band in the middle.
+
+![System design](utils/swiggy_3.svg)
 
 ## Tech stack
 
